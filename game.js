@@ -21,6 +21,10 @@ class Entity {
         this.direction = direction;
     }
     
+    _loadSprite() {
+        
+    }
+    
     _clear () {
         canvas.clearRect(this.x, this.y, this.width, this.height);
     }
