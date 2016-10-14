@@ -12,17 +12,27 @@ const Direction = {
 }
 
 class Entity {
-    constructor (x, y, width, height, color, direction) {
+    constructor (x, y, width, height, color, name, direction) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
         this.color = color;
         this.direction = direction;
+        this.name = name;
+        this.image = this._getImage();
     }
     
-    _loadSprite() {
+    _getImage () {
+        const imagePath = `images/${this.name}.png`;
+        const img = new Image();
+        img.src = imagePath;
         
+        return img;
+    }
+    
+    _drawImage () {
+        canvas.drawImage(this.image, 0, 0, this.width, this.height, this.x, this.y, this.width, this.height);
     }
     
     _clear () {
@@ -30,8 +40,17 @@ class Entity {
     }
     
     draw () {
+        const img = this.image;
         canvas.fillStyle = this.color;
         canvas.fillRect(this.x, this.y, this.width, this.height);
+        
+        if (img.complete) {
+            canvas.drawImage(this.image, 0, 0, this.width, this.height, this.x, this.y, this.width, this.height);
+        } else {
+            img.onload = () => {
+                canvas.drawImage(this.image, 0, 0, this.width, this.height, this.x, this.y, this.width, this.height);
+            };
+        }
     }
     
     update (x, y, direction) {
@@ -47,8 +66,8 @@ class Entity {
 }
 
 class Player extends Entity {
-    constructor(x, y, width, height, color, direction) {
-        super(x, y, width, height, color, direction);
+    constructor(x, y, width, height, color, name, direction) {
+        super(x, y, width, height, color, name, direction);
         
         this._addEventListeners();
     }
@@ -124,7 +143,7 @@ class Game {
     draw () {
         this._clear();
         
-        const player = new Player(50, 270, 32, 32, "pink");
+        const player = new Player(50, 270, 32, 32, "pink", "player");
         player.draw();
     }
 }
