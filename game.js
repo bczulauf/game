@@ -12,12 +12,11 @@ const Direction = {
 }
 
 class Entity {
-    constructor (x, y, width, height, color, name, direction) {
+    constructor (x, y, width, height, name, direction) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
-        this.color = color;
         this.direction = direction;
         this.name = name;
         this.image = this._getImage();
@@ -31,23 +30,15 @@ class Entity {
         return img;
     }
     
-    _drawImage () {
-        canvas.drawImage(this.image, 0, 0, this.width, this.height, this.x, this.y, this.width, this.height);
-    }
-    
     _clear () {
         canvas.clearRect(this.x, this.y, this.width, this.height);
     }
     
     draw () {
-        const img = this.image;
-        canvas.fillStyle = this.color;
-        canvas.fillRect(this.x, this.y, this.width, this.height);
-        
-        if (img.complete) {
+        if (this.image.complete) {
             canvas.drawImage(this.image, 0, 0, this.width, this.height, this.x, this.y, this.width, this.height);
         } else {
-            img.onload = () => {
+            this.image.onload = () => {
                 canvas.drawImage(this.image, 0, 0, this.width, this.height, this.x, this.y, this.width, this.height);
             };
         }
@@ -66,8 +57,8 @@ class Entity {
 }
 
 class Player extends Entity {
-    constructor(x, y, width, height, color, name, direction) {
-        super(x, y, width, height, color, name, direction);
+    constructor(x, y, width, height, name, direction) {
+        super(x, y, width, height, name, direction);
         
         this._addEventListeners();
     }
@@ -143,7 +134,7 @@ class Game {
     draw () {
         this._clear();
         
-        const player = new Player(50, 270, 32, 32, "pink", "player");
+        const player = new Player(50, 270, 32, 32, "player");
         player.draw();
     }
 }
@@ -212,8 +203,8 @@ class Bullet {
 }
 
 class Animal extends Entity {
-    constructor (x, y, width, height, color) {
-        super(x, y, width, height, color);
+    constructor(x, y, width, height, name, direction) {
+        super(x, y, width, height, name, direction);
     }
 }
 
