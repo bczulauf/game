@@ -10,15 +10,18 @@ const Direction = {
     Down : 2,
     Left: 3
 }
+const getRandomInt = (min, max) => {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 
 class Entity {
-    constructor (x, y, width, height, name, direction) {
-        this.x = x;
-        this.y = y;
+    constructor (name, width, height, x, y,  direction) {
+        this.name = name;
         this.width = width;
         this.height = height;
+        this.x = x || getRandomInt(0, 480);
+        this.y = y || getRandomInt(0, 320);
         this.direction = direction;
-        this.name = name;
         this.image = this._getImage();
     }
     
@@ -57,8 +60,8 @@ class Entity {
 }
 
 class Player extends Entity {
-    constructor(x, y, width, height, name, direction) {
-        super(x, y, width, height, name, direction);
+    constructor(name, width, height, x, y, direction) {
+        super(name, width, height, x, y, direction);
         
         this._addEventListeners();
     }
@@ -134,8 +137,11 @@ class Game {
     draw () {
         this._clear();
         
-        const player = new Player(50, 270, 32, 32, "player");
+        const player = new Player("player", 32, 32, 50, 270);
         player.draw();
+        
+        const deer = new Animal("deer", 32, 32);
+        deer.draw();
     }
 }
 
@@ -203,8 +209,9 @@ class Bullet {
 }
 
 class Animal extends Entity {
-    constructor(x, y, width, height, name, direction) {
-        super(x, y, width, height, name, direction);
+    constructor(name, width, height) {
+        
+        super(name, width, height);
     }
 }
 
