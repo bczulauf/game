@@ -10,8 +10,17 @@ const Direction = {
     Down : 2,
     Left: 3
 }
-const getRandomInt = (min, max) => {
+const animals = [];
+
+function getRandomInt (min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function collides (a, b) {
+    return a.x < b.x + b.width &&
+         a.x + a.width > b.x &&
+         a.y < b.y + b.height &&
+         a.y + a.height > b.y;
 }
 
 class Entity {
@@ -19,8 +28,8 @@ class Entity {
         this.name = name;
         this.width = width;
         this.height = height;
-        this.x = x || getRandomInt(0, 480);
-        this.y = y || getRandomInt(0, 320);
+        this.x = x || getRandomInt(width, 480 - width);
+        this.y = y || getRandomInt(height, 320 - height);
         this.direction = direction;
         this.image = this._getImage();
     }
@@ -38,6 +47,7 @@ class Entity {
     }
     
     draw () {
+        this.handleCollisions(animals);
         if (this.image.complete) {
             canvas.drawImage(this.image, 0, 0, this.width, this.height, this.x, this.y, this.width, this.height);
         } else {
@@ -113,6 +123,14 @@ class Player extends Entity {
             y: y
         };
     }
+
+    handleCollisions (entities) {
+        entities.forEach((entity) => {
+            if (collides(this, entity)) {
+                console.log("collision!!")
+            }
+        })
+    }
     
     shoot () {
         const bulletPosition = this._startpoint();
@@ -137,10 +155,10 @@ class Game {
     draw () {
         this._clear();
         
-        const player = new Player("player", 32, 32, 50, 270);
+        const player = new Player("bonnet", 56, 58, 50, 270);
         player.draw();
         
-        const deer = new Animal("deer", 32, 32);
+        const deer = new Animal("mushroom", 56, 58);
         deer.draw();
     }
 }
@@ -210,8 +228,13 @@ class Bullet {
 
 class Animal extends Entity {
     constructor(name, width, height) {
-        
         super(name, width, height);
+
+        animals.push(this);
+    }
+
+    handleCollisions (entities) {
+        console.log("animal collision")
     }
 }
 
